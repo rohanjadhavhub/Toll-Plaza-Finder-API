@@ -1,0 +1,15 @@
+# Allow only Maven inputs into the build context, excluding credentials everywhere.
+**
+!pom.xml
+!src/
+!src/main/
+!src/main/**
+!src/test/
+!src/test/**
+**/.env
+**/.env.*
+**/*.pem
+**/*.key
+**/*.p12
+**/*.jks
+**/target/

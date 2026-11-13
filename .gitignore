@@ -1,0 +1,10 @@
+target/
+.env
+.env.*
+!.env.example
+.idea/
+*.iml
+.DS_Store
+.tools/
+.m2/
+private/

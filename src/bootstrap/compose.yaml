@@ -1,0 +1,50 @@
+name: toll-plaza-finder-local
+
+services:
+  api:
+    image: toll-plaza-finder:local
+    build:
+      context: ../..
+      dockerfile: src/bootstrap/Dockerfile
+    environment:
+      SERVER_ADDRESS: 0.0.0.0
+      PORT: "8080"
+      DB_URL: jdbc:postgresql://db:5432/toll_finder
+      DB_USERNAME: toll_finder
+      DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in src/bootstrap/.env}
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY:-}
+      CORRIDOR_METERS: ${CORRIDOR_METERS:-50}
+    ports:
+      - "127.0.0.1:${API_PORT:-8080}:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    init: true
+    restart: unless-stopped
+
+  db:
+    image: imresamu/postgis:16-3.6.1-trixie
+    # Community multi-architecture build; run natively on Apple Silicon.
+    platform: linux/arm64
+    environment:
+      POSTGRES_DB: toll_finder
+      POSTGRES_USER: toll_finder
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in src/bootstrap/.env}
+    ports:
+      - "127.0.0.1:${LOCAL_DB_PORT:-5432}:5432"
+    volumes:
+      # Keep any volume from the previous PostGIS 3.7 image separate.
+      - postgres_arm64_data:/var/lib/postgresql/data
+      - ../../docs/database:/workspace/docs/database:ro
+      - ../../Dataset:/workspace/Dataset:ro
+    working_dir: /workspace
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+    restart: unless-stopped
+
+volumes:
+  postgres_arm64_data:
