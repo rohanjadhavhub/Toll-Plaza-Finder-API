@@ -8,6 +8,7 @@ services:
       dockerfile: src/bootstrap/Dockerfile
     environment:
       SERVER_ADDRESS: 0.0.0.0
+      SERVER_FORWARD_HEADERS_STRATEGY: framework
       PORT: "8080"
       DB_URL: ${DB_URL:?Set DB_URL to the Neon JDBC connection URL}
       DB_USERNAME: ${DB_USERNAME:?Set the Neon application username}
