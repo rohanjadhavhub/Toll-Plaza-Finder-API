@@ -1,6 +1,6 @@
 # Toll Plaza Finder
 
-A Java Spring Boot API that finds toll plazas along a driving route between two Indian PIN codes. It uses Google Maps for routing and PostgreSQL/PostGIS to match plazas from a CSV dataset to the route.
+A Java Spring Boot API that finds toll plazas along a driving route between two Indian PIN codes. It uses Google Maps for routing and PostgreSQL/PostGIS to match plazas on the route.
 
 [Swagger UI](https://toll-api.rohanjadhav.dev/swagger-ui.html) · [Development guide](docs/development.md) · [Production deployment](docs/production.md)
 
