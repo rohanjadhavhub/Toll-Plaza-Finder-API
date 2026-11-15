@@ -1,0 +1,26 @@
+name: toll-plaza-finder-production
+
+services:
+  api:
+    image: ${API_IMAGE:-toll-plaza-finder:production}
+    build:
+      context: ../..
+      dockerfile: src/bootstrap/Dockerfile
+    environment:
+      SERVER_ADDRESS: 0.0.0.0
+      PORT: "8080"
+      DB_URL: ${DB_URL:?Set DB_URL to the Neon JDBC connection URL}
+      DB_USERNAME: ${DB_USERNAME:?Set the Neon application username}
+      DB_PASSWORD: ${DB_PASSWORD:?Set the Neon application password}
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY:?Set the Google Maps API key}
+      CORRIDOR_METERS: ${CORRIDOR_METERS:-50}
+      SPRING_SQL_INIT_MODE: never
+    ports:
+      - "127.0.0.1:${API_PORT:-8080}:8080"
+    init: true
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
